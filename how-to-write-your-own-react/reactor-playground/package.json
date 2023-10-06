@@ -1,0 +1,27 @@
+{
+    "name": "reactor-playground",
+    "version": "1.0.0",
+    "description": "",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "webpack serve --mode development --hot",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Peter Elliott",
+    "license": "GPL-3.0-or-later",
+    "devDependencies": {
+        "@babel/cli": "^7.23.0",
+        "@babel/core": "^7.23.0",
+        "@babel/node": "^7.22.19",
+        "@babel/plugin-transform-react-jsx": "^7.22.15",
+        "@babel/preset-env": "^7.22.20",
+        "babel-loader": "^9.1.3",
+        "html-loader": "^4.2.0",
+        "webpack": "^5.88.2",
+        "webpack-cli": "^5.1.4",
+        "webpack-dev-server": "^4.15.1"
+    },
+    "dependencies": {
+        "reactor": "file:../reactor"
+    }
+}
