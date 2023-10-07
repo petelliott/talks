@@ -1,12 +1,11 @@
+import { renderComponent } from ".";
 
-export const jsx = (component, props) => {
-    console.log("called jsx", component, props);
+export const jsx = (renderer, props) => {
+    const {children, ...otherProps} = props;
+    return renderComponent(renderer, {children: [children], ...otherProps});
 }
-
-export const jsxs = (component, props) => {
-    console.log("called jsxs");
-}
+export const jsxs = (renderer, props) => renderComponent(renderer, props);
 
 export const Fragment = (props) => {
-    console.log("called fragment");
+    console.log("TODO: fragment");
 }
