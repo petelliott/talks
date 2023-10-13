@@ -1,10 +1,7 @@
-import { renderComponent } from ".";
+import { component } from ".";
 
-export const jsx = (renderer, props) => {
-    const {children, ...otherProps} = props;
-    return renderComponent(renderer, {children: [children], ...otherProps});
-}
-export const jsxs = (renderer, props) => renderComponent(renderer, props);
+export const jsx = component;
+export const jsxs = component;
 
 export const Fragment = (props) => {
     console.log("TODO: fragment");
