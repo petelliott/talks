@@ -1,7 +1,10 @@
 import { propsEqual, arraySetDifference } from "./util";
 
-export const render = (element, component) =>
-    element.appendChild(freshRenderComponent(component).element);
+export const render = (element, component) => {
+    const tree = freshRenderComponent(component);
+    element.appendChild(tree.element);
+    return tree;
+}
 
 export const component = (renderer, props) => ({
     type: renderer,
@@ -69,13 +72,13 @@ const reconcileComponent = (component, tree) => {
 
     if (typeof component.type === "function") {
         tree.props = component.props;
-        tree.children = rerenderComponent(component.type(props), tree.children);
+        tree.children = rerenderComponent(component.type(component.props), tree.children);
         tree.element = tree.children.element;
         return tree;
     }
 
-    const { treeChildren, ...treeProps } = tree.props;
-    const { componentChildren, ...componentProps } = component.props;
+    const { children: _, ...treeProps } = tree.props;
+    let { children: componentChildren, ...componentProps } = component.props;
 
     // reconcile props
     const oldkeys = Object.keys(treeProps);
@@ -99,13 +102,13 @@ const reconcileComponent = (component, tree) => {
 
     const newchildren = [];
     let i;
-    for (i = 0; i < treeChildren.length && i < componentChildren.length; ++i) {
-        newchildren.push(rerenderComponent(componentChildren[i], treeChildren[i]));
+    for (i = 0; i < tree.children.length && i < componentChildren.length; ++i) {
+        newchildren.push(rerenderComponent(componentChildren[i], tree.children[i]));
     }
 
     // remove excess tree children from the dom
-    for (; i < treeChildren.length; ++i) {
-        treeChildren[i].element.remove();
+    for (; i < tree.children.length; ++i) {
+        tree.children[i].element.remove();
     }
 
     // add extra new children
@@ -116,11 +119,11 @@ const reconcileComponent = (component, tree) => {
     return tree;
 };
 
-const rerenderComponent = (component, tree) => {
+export const rerenderComponent = (component, tree) => {
     if (tree === null || (typeof component === "string" && tree.typ !== textnode) || component.type !== tree.type)
         return freshRenderComponent(component);
 
-    if (propsEqual(component.props, tree.props))
+    if (typeof component !== "string" && propsEqual(component.props, tree.props))
         return tree;
 
     return reconcileComponent(component, tree);
