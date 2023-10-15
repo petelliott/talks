@@ -1,4 +1,4 @@
-import { scheduleRerender } from ".";
+import { scheduleRerender } from "./vdom";
 
 let useStateCounter;
 let useEffectCounter;
