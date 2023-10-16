@@ -1,4 +1,5 @@
 import { scheduleRerender } from "./vdom";
+import { dependenciesEqual } from "./util";
 
 let useStateCounter;
 let useEffectCounter;
@@ -28,5 +29,31 @@ export const useState = (initialState) => {
             },
         ];
     }
+    ++useStateCounter;
     return state[index];
 };
+
+export const useEffect = (effect, dependencies) => {
+    const node = hookNode;
+    const index = useEffectCounter;
+    node.effects ??= {};
+    const effects = node.effects;
+
+    if (!effects.hasOwnProperty(index)) {
+        effects[index] = {}
+    }
+
+    effects[index].effect = effect;
+    effects[index].olddeps = effects[index].deps;
+    effects[index].deps = dependencies;
+    ++useEffectCounter;
+};
+
+export const runEffects = (node) => {
+    for (const effect of Object.values(node?.effects ?? {})) {
+        if (!dependenciesEqual(effect.olddeps, effect.deps) ||
+            effect.deps === null || effect.deps === undefined) {
+            effect.effect();
+        }
+    }
+}

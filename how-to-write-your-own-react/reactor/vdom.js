@@ -1,5 +1,5 @@
 import { propsEqual, arraySetDifference, flattenRecursive } from "./util";
-import { withHookContext } from "./hooks";
+import { withHookContext, runEffects } from "./hooks";
 
 const textnode = Symbol("textnode");
 
@@ -20,7 +20,7 @@ const willRenderAsText = (component) =>
 const runComponent = (component, vdom) =>
       withHookContext(vdom, () => component.type(component.props));
 
-export const renderVdom = (component, vdom) => {
+const renderVdom = (component, vdom) => {
     // convert undefined to null for consistency
     vdom ??= null;
     if ((willRenderAsText(component) && vdom?.type !== textnode) ||
@@ -86,7 +86,7 @@ const removePropAttribute = (element, name) => {
     }
 };
 
-export const renderDom = (newvdom, current) => {
+const renderDom = (newvdom, current) => {
     if (current === newvdom) {
     } else if (current != null && current.type !== newvdom.type) {
         renderDom(newvdom, null);
@@ -141,6 +141,21 @@ export const renderDom = (newvdom, current) => {
     return newvdom.element;
 };
 
+const runAllEffects = (node) => {
+    if (typeof node.type === "function") {
+        runEffects(node);
+        runAllEffects(node.children);
+    } else if (typeof node.type === "string" ) {
+        node.children.forEach(runAllEffects);
+    }
+};
+
+export const renderInitial = (element, component) => {
+    const vdom = renderVdom(component, null);
+    element.appendChild(renderDom(vdom, null));
+    return vdom;
+};
+
 // TODO make this per render().
 let inrender = false;
 const renderQueue = [];
@@ -154,6 +169,8 @@ export const scheduleRerender = (vdom) => {
             node.children = renderVdom(runComponent(node, node), node.children);
             node.element = renderDom(node.children, oldvdom);
         }
+        // TODO coalesce renders
+        runAllEffects(vdom);
         inrender = false;
     }
 }

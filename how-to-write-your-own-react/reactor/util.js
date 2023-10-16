@@ -20,6 +20,25 @@ export const propsEqual = (a, b) => {
     return true;
 };
 
+export const dependenciesEqual = (a, b) => {
+    if (a === b)
+        return true;
+
+    if (a === null || b === null || a === undefined || b === undefined)
+        return false;
+
+
+    if (a.length !== b.length)
+        return false;
+
+    for (const k in a) {
+        if (a[k] !== b[k])
+            return false;
+    }
+
+    return true;
+};
+
 export const arraySetDifference = (a, b) =>
     a.filter(i => !b.includes(i));
 
