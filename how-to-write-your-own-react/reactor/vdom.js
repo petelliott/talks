@@ -1,4 +1,4 @@
-import { propsEqual, arraySetDifference } from "./util";
+import { propsEqual, arraySetDifference, flattenRecursive } from "./util";
 import { withHookContext } from "./hooks";
 
 const textnode = Symbol("textnode");
@@ -9,10 +9,7 @@ const normalizeChildren = (children) => {
     if (children === null || children === undefined)
         return [];
 
-    if (!Array.isArray(children))
-        return [children];
-
-    return children;
+    return flattenRecursive(children);
 };
 
 const willRenderAsText = (component) =>
@@ -123,7 +120,12 @@ export const renderDom = (newvdom, current) => {
 
         let i;
         for (i = 0; i < current?.children.length && i < newvdom.children.length; ++i) {
-            renderDom(newvdom.children[i], current?.children[i]);
+            const currentelement = current?.children[i].element;
+            const element = renderDom(newvdom.children[i], current?.children[i]);
+            if (element !== currentelement) {
+                currentelement.replaceWith(element);
+            }
+
         }
 
         // remove excess vdom children from the dom
