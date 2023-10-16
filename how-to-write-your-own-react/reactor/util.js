@@ -3,6 +3,9 @@ export const propsEqual = (a, b) => {
     if (a === b)
         return true;
 
+    if (a == null || b == null)
+        return false;
+
     var keysa = Object.keys(a);
     var keysb = Object.keys(b);
 

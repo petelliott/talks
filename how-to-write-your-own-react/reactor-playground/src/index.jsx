@@ -9,3 +9,4 @@ const App = (props) => {
 };
 
 const tree = Reactor.render(document.getElementById("root"), <App />);
+//console.log(tree);

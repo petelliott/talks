@@ -3,6 +3,8 @@ import { withHookContext } from "./hooks";
 
 const textnode = Symbol("textnode");
 
+// vdom helpers
+
 const normalizeChildren = (children) => {
     if (children === null || children === undefined)
         return [];
@@ -13,8 +15,63 @@ const normalizeChildren = (children) => {
     return children;
 };
 
+const willRenderAsText = (component) =>
+    typeof component !== "function" && typeof component !== "object";
+
+// vdom rendering
+
 const runComponent = (component, vdom) =>
       withHookContext(vdom, () => component.type(component.props));
+
+export const renderVdom = (component, vdom) => {
+    // convert undefined to null for consistency
+    vdom ??= null;
+    if ((willRenderAsText(component) && vdom?.type !== textnode) ||
+        component.type !== vdom?.type) {
+        // Fresh render when the component type is different
+        vdom = null;
+    }
+
+    if (willRenderAsText(component)) {
+        if (vdom?.value === component) {
+            return vdom;
+        }
+
+        return {
+            type: textnode,
+            value: component,
+        };
+    }
+
+    if (propsEqual(component.props, vdom?.props)) {
+        return vdom;
+    }
+
+    if (typeof component.type === "function") {
+        const new_vdom = {
+            type: component.type,
+            props: component.props,
+            children: null,
+            state: vdom?.state ?? {},
+        };
+        new_vdom.children = renderVdom(
+            runComponent(component, new_vdom),
+            vdom?.children
+        );
+        return new_vdom;
+    }
+
+    const new_children = normalizeChildren(component.props.children)
+          .map((component, i) => renderVdom(component, vdom?.children?.[i]));
+
+    return {
+        type: component.type,
+        props: component.props,
+        children: new_children,
+    };
+};
+
+// vdom reconciliation and dom rendering
 
 const setPropAttribute = (element, name, value) => {
     if (element[name] !== undefined) {
@@ -22,7 +79,7 @@ const setPropAttribute = (element, name, value) => {
     } else {
         element.setAttribute(name, value);
     }
-}
+};
 
 const removePropAttribute = (element, name) => {
     if (element[name] !== undefined) {
@@ -30,120 +87,56 @@ const removePropAttribute = (element, name) => {
     } else {
         element.removeAttribute(name);
     }
-}
-
-const willRenderAsText = (component) =>
-    typeof component !== "function" && typeof component !== "object";
-
-
-export const freshRenderComponent = (component) => {
-    if (willRenderAsText(component)) {
-        return {
-            typ: textnode,
-            element: document.createTextNode(component),
-            value: component,
-        };
-    }
-
-    if (typeof component.type === "function") {
-        const vdom = {
-            type: component.type,
-            props: component.props,
-            element: null,
-            children: null,
-            state: {},
-        };
-        const child = freshRenderComponent(runComponent(component, vdom));
-        vdom.element = child.element;
-        vdom.children = child;
-        return vdom;
-    }
-
-    const { children, ...otherProps } = component.props;
-    const element = document.createElement(component.type);
-    for (const [key, value] of Object.entries(otherProps)) {
-        setPropAttribute(element, key, value);
-    }
-
-    const childnodes = normalizeChildren(children).map(freshRenderComponent);
-    for (const child of childnodes) {
-        element.appendChild(child.element);
-    }
-
-    return {
-        type: component.type,
-        props: component.props,
-        element: element,
-        children: childnodes,
-    };
 };
 
-const reconcileComponent = (component, vdom) => {
-    if (willRenderAsText(component)) {
-        if (vdom.value !== component) {
-            vdom.element.nodeValue = component;
-            vdom.value = component;
+export const renderDom = (newvdom, current) => {
+    if (current === newvdom) {
+    } else if (current != null && current.type !== newvdom.type) {
+        renderDom(newvdom, null);
+    } else if (newvdom.type === textnode) {
+        newvdom.element = current?.element ?? document.createTextNode(newvdom.value);
+        if (current?.value !== newvdom.value) {
+            newvdom.element.nodeValue = newvdom.value;
         }
-        return vdom;
-    }
+    } else if (typeof newvdom.type === "function") {
+        renderDom(newvdom.children, current?.children);
+        newvdom.element = newvdom.children.element;
+    } else {
+        const { children: _1, ...currentProps } = current?.props ?? {};
+        const { children: _2, ...newProps } = newvdom.props;
 
-    if (typeof component.type === "function") {
-        vdom.props = component.props;
-        vdom.children = rerenderComponent(runComponent(component, vdom), vdom.children);
-        vdom.element = vdom.children.element;
-        return vdom;
-    }
+        const currentkeys = Object.keys(currentProps);
+        const newkeys = Object.keys(newProps);
 
-    const { children: _, ...vdomProps } = vdom.props;
-    let { children: componentChildren, ...componentProps } = component.props;
+        newvdom.element = current?.element ?? document.createElement(newvdom.type);
 
-    // reconcile props
-    const oldkeys = Object.keys(vdomProps);
-    const newkeys = Object.keys(componentProps);
+        // props that have been removed
+        for (const attr of arraySetDifference(currentkeys, newkeys)) {
+            removePropAttribute(newvdom.element, attr);
+        }
 
-    // props that have been removed
-    for (const attr of arraySetDifference(oldkeys, newkeys)) {
-        removePropAttribute(vdom.element, attr);
-    }
+        for (const attr of newkeys) {
+            if (newProps[attr] !== currentProps[attr]) {
+                setPropAttribute(newvdom.element, attr, newProps[attr]);
+            }
+        }
 
-    // props that have been added or changed
-    for (const attr of newkeys) {
-        if (vdomProps[attr] !== componentProps[attr]) {
-            setPropAttribute(vdom.element, attr, componentProps[attr]);
+        let i;
+        for (i = 0; i < current?.children.length && i < newvdom.children.length; ++i) {
+            renderDom(newvdom.children[i], current?.children[i]);
+        }
+
+        // remove excess vdom children from the dom
+        for (; i < current?.children.length; ++i) {
+            current.children[i].element.remove();
+        }
+
+        // add extra new children
+        for (; i < newvdom.children.length; ++i) {
+            newvdom.element.appendChild(renderDom(newvdom.children[i], null));
         }
     }
-    vdom.props = component.props;
-
-    // reconcile children
-    componentChildren = normalizeChildren(componentChildren);
-
-    const newchildren = [];
-    let i;
-    for (i = 0; i < vdom.children.length && i < componentChildren.length; ++i) {
-        newchildren.push(rerenderComponent(componentChildren[i], vdom.children[i]));
-    }
-
-    // remove excess vdom children from the dom
-    for (; i < vdom.children.length; ++i) {
-        vdom.children[i].element.remove();
-    }
-
-    // add extra new children
-    for (; i < componentChildren[i]; ++i) {
-        newchildren.push(freshRenderComponent(componentChildren[i]));
-    }
-    vdom.children = newchildren;
-    return vdom;
-};
-
-const rerenderComponent = (component, vdom) => {
-    if (vdom === null || (willRenderAsText(component) && vdom.typ !== textnode) || component.type !== vdom.type)
-        return freshRenderComponent(component);
-
-    if (!willRenderAsText(component) && propsEqual(component.props, vdom.props))
-        return vdom;
-
-    return reconcileComponent(component, vdom);
+    return newvdom.element;
 };
 
 // TODO make this per render().
@@ -154,9 +147,10 @@ export const scheduleRerender = (vdom) => {
     if (!inrender) {
         inrender = true;
         while (renderQueue.length > 0) {
-            let node = renderQueue.shift();
-            node.children = rerenderComponent(runComponent(node, node), node.children);
-            node.element = vdom.children.element;
+            const node = renderQueue.shift();
+            const oldvdom = node.children;
+            node.children = renderVdom(runComponent(node, node), node.children);
+            node.element = renderDom(node.children, oldvdom);
         }
         inrender = false;
     }

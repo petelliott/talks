@@ -1,12 +1,12 @@
 import { withHookContext, useState } from "./hooks";
-import { freshRenderComponent } from "./vdom";
+import { renderVdom, renderDom } from "./vdom";
 export { useState } from "./hooks";
 
 
 export const render = (element, component) => {
-    const tree = freshRenderComponent(component);
-    element.appendChild(tree.element);
-    return tree;
+    const vdom = renderVdom(component, null);
+    element.appendChild(renderDom(vdom, null));
+    return vdom;
 }
 
 export const component = (renderer, props) => ({
