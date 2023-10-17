@@ -1,4 +1,4 @@
-import { propsEqual, arraySetDifference, flattenRecursive } from "./util";
+import { propsEqual, arraySetDifference } from "./util";
 import { withHookContext, runEffects } from "./hooks";
 
 const textnode = Symbol("textnode");
@@ -9,7 +9,10 @@ const normalizeChildren = (children) => {
     if (children === null || children === undefined)
         return [];
 
-    return flattenRecursive(children);
+    if (!Array.isArray(children))
+        return [children];
+
+    return children.map(normalizeChildren).reduce((a, b) => a.concat(b), []);
 };
 
 const willRenderAsText = (component) =>

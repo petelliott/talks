@@ -42,12 +42,6 @@ export const dependenciesEqual = (a, b) => {
 export const arraySetDifference = (a, b) =>
     a.filter(i => !b.includes(i));
 
-export const flattenRecursive = (l) => {
-    if (!Array.isArray(l))
-        return [l];
-
-    return l.map(flattenRecursive).reduce((a, b) => a.concat(b), []);
-};
 
 Number.prototype.dotimes = function (f) {
     var l = new Array(this);
