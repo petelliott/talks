@@ -58,8 +58,14 @@ const renderVdom = (component, vdom) => {
         return new_vdom;
     }
 
-    const new_children = normalizeChildren(component.props.children)
-          .map((component, i) => renderVdom(component, vdom?.children?.[i]));
+    const new_children = Object.fromEntries(
+        normalizeChildren(component.props.children)
+            .map((component, i) => {
+                // "$" and "_" prevent number like keys from getting reordered when itterating over a list
+                // and also prevents automatic keys being mistaken for regular keys.
+                const key = (component.key === undefined)? "$"+i : "_" + component.key;
+                return [key, renderVdom(component, vdom?.children?.[key])];
+            }));
 
     return {
         type: component.type,
@@ -99,8 +105,8 @@ const renderDom = (newvdom, current) => {
         renderDom(newvdom.children, current?.children);
         newvdom.element = newvdom.children.element;
     } else {
-        const { children: _1, ...currentProps } = current?.props ?? {};
-        const { children: _2, ...newProps } = newvdom.props;
+        const { children: _3, key: _1, ...currentProps } = current?.props ?? {};
+        const { children: _4, key: _2, ...newProps } = newvdom.props;
 
         const currentkeys = Object.keys(currentProps);
         const newkeys = Object.keys(newProps);
@@ -118,24 +124,41 @@ const renderDom = (newvdom, current) => {
             }
         }
 
-        let i;
-        for (i = 0; i < current?.children.length && i < newvdom.children.length; ++i) {
-            const currentelement = current?.children[i].element;
-            const element = renderDom(newvdom.children[i], current?.children[i]);
-            if (element !== currentelement) {
-                currentelement.replaceWith(element);
+        const currentChildren = Object.keys(current?.children ?? {});
+        const newChildren = Object.keys(newvdom.children);
+
+        for (const attr of arraySetDifference(currentChildren, newChildren)) {
+            current?.children[attr].element.remove();
+        }
+
+        let curri = 0;
+        let newi = 0;
+        const seen = new Set();
+        while (newi < newChildren.length) {
+            let ckey = currentChildren[curri];
+            for (ckey = currentChildren[curri];
+                 curri < currentChildren.length && (!newChildren.includes(ckey) || seen.has(ckey));
+                 ckey = currentChildren[++curri]) {
             }
 
-        }
-
-        // remove excess vdom children from the dom
-        for (; i < current?.children.length; ++i) {
-            current.children[i].element.remove();
-        }
-
-        // add extra new children
-        for (; i < newvdom.children.length; ++i) {
-            newvdom.element.appendChild(renderDom(newvdom.children[i], null));
+            const nkey = newChildren[newi];
+            seen.add(nkey);
+            const currentelement = current?.children[ckey]?.element;
+            const element = renderDom(newvdom.children[nkey], current?.children[nkey]);
+            if (nkey === ckey) {
+                if (element !== currentelement) {
+                    currentelement.replaceWith(element);
+                }
+                ++curri;
+                ++newi;
+            } else {
+                if (currentelement === undefined) {
+                    newvdom.element.appendChild(element);
+                } else {
+                    newvdom.element.insertBefore(element, currentelement);
+                }
+                ++newi;
+            }
         }
     }
     return newvdom.element;
@@ -146,7 +169,7 @@ const runAllEffects = (node) => {
         runEffects(node);
         runAllEffects(node.children);
     } else if (typeof node.type === "string" ) {
-        node.children.forEach(runAllEffects);
+        Object.values(node.children).forEach(runAllEffects);
     }
 };
 

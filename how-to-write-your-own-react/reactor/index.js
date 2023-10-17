@@ -5,7 +5,8 @@ export { useState, useEffect } from "./hooks";
 
 export const render = renderInitial;
 
-export const component = (renderer, props) => ({
+export const component = (renderer, props, key) => ({
     type: renderer,
     props: props,
+    key: key
 });

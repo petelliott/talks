@@ -2,7 +2,6 @@ import * as Reactor from "reactor";
 
 const Counter = (props) => {
     const [count, setCount] = Reactor.useState(0);
-    Reactor.useEffect(() => console.log("hey"), []);
     return <div>
         <p>count={count}</p>
         <button onclick={(e) => setCount(count + 1)}>increment</button>
@@ -12,10 +11,9 @@ const Counter = (props) => {
 const App = (props) => {
     const [count, setCount] = Reactor.useState(0);
 
-
     return <div>
         <div>
-            {count.dotimes(() => <Counter/>)}
+            {count.dotimes((i) => {console.log(count-i); return <Counter key={count-i} f={6}/>;})}
         </div>
         <button onclick={(e) => setCount(count + 1)}>add counter</button>
         <button onclick={(e) => setCount(count - 1)}>remove counter</button>
@@ -23,3 +21,4 @@ const App = (props) => {
 };
 
 const tree = Reactor.render(document.getElementById("root"), <App />);
+//console.log(tree);
