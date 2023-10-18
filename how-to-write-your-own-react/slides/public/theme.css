@@ -3,3 +3,33 @@
     --theme-color-mid: darkgrey;
     --theme-color-light: lightgrey;
 }
+
+.green {
+    --theme-color-full: #345B47;
+    --theme-color-mid: #97A89F;
+    --theme-color-light: #D8DBD9;
+}
+
+.brown {
+    --theme-color-full: #8D2E02;
+    --theme-color-mid: #AE765A;
+    --theme-color-light: #D9CCC6;
+}
+
+.pink {
+    --theme-color-full: #8F003E;
+    --theme-color-mid: #AF597E;
+    --theme-color-light: #D9C6CE;
+}
+
+.purple {
+    --theme-color-full: #3E0C83;
+    --theme-color-mid: #7E60A8;
+    --theme-color-light: #CEC7D7;
+}
+
+.blue {
+    --theme-color-full: #00378F;
+    --theme-color-mid: #597BAF;
+    --theme-color-light: #C6CED9;
+}

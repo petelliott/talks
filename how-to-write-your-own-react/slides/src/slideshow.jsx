@@ -5,8 +5,10 @@ import { IconButton } from "./util";
 export const SlideShow = (props) => {
     const [slide, setSlide] = useState(0);
     const slides = Array.isArray(props.children)? props.children : props.children;
+    console.log(slides[slide]);
+    const theme = slides[slide]?.props?.theme ?? "grey";
     return (
-        <div className={`fullheight ${props.className??""}`}>
+        <div className={`fullheight ${theme} ${props.className??""}`}>
             <div className="fullheight" >{slides[slide]}</div>
             <div className="controls">
                 <IconButton
@@ -29,16 +31,27 @@ export const Slide = (props) => (
 );
 
 export const Container = (props) => (
-    <div className="container">{props.children}</div>
+    <div className={`container ${props.className??""}`}>{props.children}</div>
 );
 
 export const TitledContainer = (props) => (
     <div className={`fullheight titledcontainer ${props.className??""}`}>
-        <h1 className={`title ${props.titleClass??""}`}>{props.title}</h1>
+        <h1>{props.title}</h1>
         <div className="container">
             {props.children}
         </div>
     </div>
+);
+
+export const TitleSlide = (props) => (
+    <Slide>
+        <div className="titleslide fullheight">
+            <div>
+                <h1>{props.title}</h1>
+                <h2>{props.subtitle}</h2>
+            </div>
+        </div>
+    </Slide>
 );
 
 export const HSplit = (props) => (
