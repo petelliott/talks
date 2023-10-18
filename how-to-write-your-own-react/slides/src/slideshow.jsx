@@ -43,6 +43,12 @@ export const TitledContainer = (props) => (
     </div>
 );
 
+export const TitledSlide = (props) => (
+    <Slide>
+        <TitledContainer {...props}/>
+    </Slide>
+);
+
 export const TitleSlide = (props) => (
     <Slide>
         <div className="titleslide fullheight">
