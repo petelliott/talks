@@ -1,0 +1,5 @@
+.grey {
+    --theme-color-full: grey;
+    --theme-color-mid: darkgrey;
+    --theme-color-light: lightgrey;
+}

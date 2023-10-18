@@ -1,3 +1,4 @@
+@import url("theme.css");
 /* vars */
 .slide {
     --font-size: 2rem;
@@ -10,17 +11,6 @@ html, body {
     padding: 0;
 }
 
-.previous-slide {
-    position: absolute;
-    bottom: 2rem;
-    right: 5rem;
-}
-
-.next-slide {
-    position: absolute;
-    bottom: 2rem;
-    right: 1rem;
-}
 
 .slide {
     font-size: var(--font-size);
@@ -29,6 +19,65 @@ html, body {
 .fullheight {
     height: 100%;
 }
+
+/* control stuff */
+
+.icon-button {
+    background: none;
+    padding: 0;
+    border: none;
+}
+
+.icon-button > .material-symbols-outlined {
+    vertical-align: middle;
+}
+
+.controls {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 14rem;
+    height: 10rem;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.controls:hover {
+    opacity: 100%;
+    transition: opacity 0.5s ease-in-out;
+}
+
+
+.slide-nav-button {
+    color: var(--theme-color-full);
+    padding: 0.2rem;
+    border-radius: 50%;
+}
+
+.slide-nav-button:hover {
+    background-color: var(--theme-color-light);
+}
+
+.slide-nav-button.disabled {
+    color: var(--theme-color-mid);
+}
+
+.slide-nav-button > .material-symbols-outlined {
+    font-size: 48px;
+}
+
+.previous-slide {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 5rem;
+}
+
+.next-slide {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1.5rem;
+}
+
 
 /* container */
 .container {
@@ -52,6 +101,8 @@ html, body {
     margin: 0;
     padding: 2rem;
     font-size: calc(var(--font-size)*2);
+    background-color: var(--theme-color-full);
+    color: white;
 }
 
 /* HSplit */
@@ -65,10 +116,4 @@ html, body {
     display: flex;
     flex-direction: column;
     gap: var(--container-margin);
-}
-
-/* this-talk specific styles*/
-
-.testTitle {
-    background: lightgrey;
 }

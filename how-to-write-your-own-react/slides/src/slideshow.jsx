@@ -1,13 +1,27 @@
 import { useState } from "reactor";
+import { IconButton } from "./util";
+
 
 export const SlideShow = (props) => {
     const [slide, setSlide] = useState(0);
     const slides = Array.isArray(props.children)? props.children : props.children;
-    return <div className="fullheight">
-        <div className="fullheight" key={slide}>{slides[slide]}</div>
-        <button className="previous-slide" onclick={() => setSlide(slide-1)}>previous</button>
-        <button className="next-slide" onclick={() => setSlide(slide+1)}>next</button>
-    </div>;
+    return (
+        <div className={`fullheight ${props.className??""}`}>
+            <div className="fullheight" >{slides[slide]}</div>
+            <div className="controls">
+                <IconButton
+                    icon="arrow_back"
+                    className="previous-slide slide-nav-button"
+                    onclick={() => setSlide(slide-1)}
+                    enabled={slide != 0} />
+                <IconButton
+                    icon="arrow_forward "
+                    className="next-slide slide-nav-button"
+                    onclick={() => setSlide(slide+1)}
+                    enabled={slide+1 < slides.length} />
+            </div>
+        </div>
+    );
 };
 
 export const Slide = (props) => (
@@ -19,8 +33,8 @@ export const Container = (props) => (
 );
 
 export const TitledContainer = (props) => (
-    <div className="fullheight titledcontainer">
-        <h1 className={`title ${props.titleClass}`}>{props.title}</h1>
+    <div className={`fullheight titledcontainer ${props.className??""}`}>
+        <h1 className={`title ${props.titleClass??""}`}>{props.title}</h1>
         <div className="container">
             {props.children}
         </div>
