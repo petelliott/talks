@@ -28,7 +28,7 @@ const ListDemoSlide = (props) => (
 
 const App = (props) =>
       (<SlideShow>
-           <TitleSlide theme="green" subtitle="By Peter Elliott" title="How to Write Your Own React"/>
+           <TitleSlide theme="green" subtitle="By Peter Elliott" title="Green"/>
            <ListDemoSlide theme="green" title="Green"/>
            <TitleSlide theme="brown" subtitle="By Peter Elliott" title="Brown"/>
            <ListDemoSlide theme="brown" title="Brown"/>

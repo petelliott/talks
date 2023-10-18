@@ -5,10 +5,16 @@ import { IconButton } from "./util";
 export const SlideShow = (props) => {
     const [slide, setSlide] = useState(0);
     const slides = Array.isArray(props.children)? props.children : props.children;
-    console.log(slides[slide]);
     const theme = slides[slide]?.props?.theme ?? "grey";
+    const onkeydown = (event) => {
+        if (event.key === "ArrowRight" || event.key === " ")
+            setSlide(Math.min(slide+1, slides.length-1));
+        if (event.key === "ArrowLeft")
+            setSlide(Math.max(slide-1, 0));
+    };
+
     return (
-        <div className={`fullheight ${theme} ${props.className??""}`}>
+        <div className={`fullheight ${theme} ${props.className??""}`} onkeydown={onkeydown} tabindex="0">
             <div className="fullheight" >{slides[slide]}</div>
             <div className="controls">
                 <IconButton

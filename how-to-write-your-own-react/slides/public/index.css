@@ -108,6 +108,7 @@ html, body {
     /*text-align: center;*/
     margin: 0;
     padding: 2rem;
+    padding-left: var(--container-margin);
     font-size: calc(var(--font-size)*1.5);
     background-color: var(--theme-color-full);
     color: white;
