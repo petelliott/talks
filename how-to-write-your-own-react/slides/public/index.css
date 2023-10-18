@@ -1,4 +1,5 @@
 @import url("theme.css");
+@import url("minibrowser.css");
 /* vars */
 .slide {
     --font-size: 4rem;
@@ -140,7 +141,7 @@ html, body {
 .hsplit {
     display: flex;
     flex-direction: row;
-    gap: calc(var(--container-margin)*2);
+    gap: calc(var(--container-margin));
 }
 
 .vsplit {

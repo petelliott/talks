@@ -1,0 +1,121 @@
+
+.minibrowser {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    font-size: 1rem;
+    --outline-radius: 0.2rem;
+}
+
+.minibrowser .mbtabcontainer {
+    background-color: var(--theme-color-mid);
+    border-top-left-radius: var(--outline-radius);
+    border-top-right-radius: var(--outline-radius);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.minibrowser .mbnewtab .icon-button {
+    color: var(--theme-color-full);
+    height: 30px;
+    border-radius: var(--outline-radius);
+}
+
+.minibrowser .mbnewtab .icon-button:hover {
+    background-color: var(--theme-color-light);
+}
+
+
+.minibrowser .mbnewtab .material-symbols-outlined {
+    font-size: 30px;
+}
+
+.minibrowser .mbtab {
+    background-color: var(--theme-color-full);
+    width: max-content;
+    color:white;
+    margin: 0.4rem;
+    margin-bottom:0.2rem;
+    padding: 0.5rem;
+    border-radius: var(--outline-radius);
+    min-width: 11rem;
+    color: var(--theme-color-light);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.minibrowser .mbtab .material-symbols-outlined {
+    font-size: 15px;
+}
+
+.minibrowser .mbbar {
+    background-color: var(--theme-color-full);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.minibrowser .mbcontrols {
+    margin: 0.4rem;
+    color: var(--theme-color-light);
+    display: flex;
+    align-items: center;
+}
+
+.minibrowser .mbcontrols .material-symbols-outlined {
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+}
+
+.minibrowser .mbcontrols .icon-button {
+    color: var(--theme-color-light);
+    border-radius: var(--outline-radius);
+    height: 2rem;
+}
+
+.minibrowser .mbcontrols .icon-button.disabled {
+    color: var(--theme-color-mid);
+}
+
+.minibrowser .mbcontrols .icon-button:hover {
+    background-color: var(--theme-color-mid);
+}
+
+.minibrowser .mbshield {
+    margin-right: 1rem;
+}
+
+.minibrowser .mbaddress {
+    background-color: var(--theme-color-mid);
+    margin: 0.4rem;
+    margin-left: 2rem;
+    margin-right: 7rem;
+    flex-grow: 1;
+    border-radius: var(--outline-radius);
+    padding: 0.2rem;
+    display: flex;
+    align-items: center;
+}
+
+.minibrowser .mbcontent {
+    flex-grow: 1;
+    border: 2px solid var(--theme-color-full);
+    border-bottom-left-radius: var(--outline-radius);
+    border-bottom-right-radius: var(--outline-radius);
+    border-top: none;
+}
+
+.minibrowser .material-symbols-outlined {
+    vertical-align: sub;
+}
+
+.minibrowser .mbcontent iframe {
+    border: none;
+    width: 100%;
+    height: 100%;
+}
