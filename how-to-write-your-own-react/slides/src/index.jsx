@@ -47,7 +47,7 @@ const MiniBrowserDemoSlide = (props) => (
             <Editor content={example_code} language="jsx"/>
             <Editor tabs={[
                         {content: example_code, title: "some code", language: "jsx"},
-                        {content: "asdfsdfsddgsdg\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nasdfsdfsd\nsadfsd\nsdfsdaf", title: "other code", language: "jsx"}
+                        {content: "asdfsdfsddgsdg\n\n\n\n\n\n\n\nasdfsdf\n\nasdfsdf\n\n\n\n\n\n\n\n\n\n\n\n\n\nasdfsdfsd\nsadfsd\nsdfsdaf", title: "other code", language: "jsx"}
                     ]}/>
             {/*<MiniBrowser src="https://wikipedia.org" title="Wikipedia"/>*/}
         </HSplit>

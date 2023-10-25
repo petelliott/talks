@@ -71,7 +71,10 @@
     flex: 1;
     border-bottom-right-radius: var(--outline-radius);
     background-color: var(--theme-color-light3);
-    flex-basis:100%;
+}
+
+.editor .hljs {
+    background-color: var(--theme-color-light3);
 }
 
 .editor .content.topcorners {
