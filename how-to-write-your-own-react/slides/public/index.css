@@ -1,5 +1,7 @@
 @import url("theme.css");
 @import url("minibrowser.css");
+@import url("editor.css");
+@import url("solarized-light.css");
 /* vars */
 .slide {
     --font-size: 4rem;
@@ -91,7 +93,7 @@ html, body {
 /* container */
 .container {
     display:flex;
-    flex-grow: 1;
+    flex: 1;
     margin: var(--container-margin);
 }
 
@@ -108,7 +110,7 @@ html, body {
 .titledcontainer h1 {
     /*text-align: center;*/
     margin: 0;
-    padding: 2rem;
+    padding: 1rem;
     padding-left: var(--container-margin);
     font-size: calc(var(--font-size)*1.5);
     background-color: var(--theme-color-full);

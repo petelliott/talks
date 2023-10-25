@@ -35,7 +35,6 @@
 .minibrowser .mbtab {
     background-color: var(--theme-color-full);
     width: max-content;
-    color:white;
     margin: 0.4rem;
     margin-bottom:0.2rem;
     padding: 0.5rem;

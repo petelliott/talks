@@ -1,6 +1,7 @@
 import * as Reactor from "reactor";
 import { SlideShow, Slide, TitledContainer, HSplit, VSplit, TitleSlide, TitledSlide } from "./slideshow";
 import { MiniBrowser } from "./minibrowser";
+import { Editor } from "./editor";
 
 const ListDemoSlide = (props) => (
     <TitledSlide {...props}>
@@ -27,19 +28,28 @@ const ListDemoSlide = (props) => (
     </TitledSlide>
 );
 
+const example_code = `
+const Counter = (props) => {
+    const [count, setCount] = Reactor.useState(0);
+    const incCount = () => setCount(count+1);
+    return <div>
+        <p>count={count}</p>
+        <button onclick={incCount}>
+            increment
+        </button>
+     </div>;
+};
+`;
+
 const MiniBrowserDemoSlide = (props) => (
     <TitledSlide theme={props.theme} title={props.title}>
         <HSplit>
-            <ul>
-                <li>first point</li>
-                <ul>
-                    <li>nested 1</li>
-                    <li>nested 2</li>
-                </ul>
-                <li>second point</li>
-                <li>third point</li>
-            </ul>
-            <MiniBrowser src="https://example.com" title="Example Domain"/>
+            <Editor content={example_code} language="jsx"/>
+            <Editor tabs={[
+                        {content: example_code, title: "some code", language: "jsx"},
+                        {content: "asdfsdfsddgsdg\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nasdfsdfsd\nsadfsd\nsdfsdaf", title: "other code", language: "jsx"}
+                    ]}/>
+            {/*<MiniBrowser src="https://wikipedia.org" title="Wikipedia"/>*/}
         </HSplit>
     </TitledSlide>
 );
@@ -47,8 +57,8 @@ const MiniBrowserDemoSlide = (props) => (
 
 const App = (props) => (
     <SlideShow>
-        <TitleSlide theme="green" subtitle="By Peter Elliott" title="Green"/>
         <MiniBrowserDemoSlide theme="green" title="Green"/>
+        <TitleSlide theme="green" subtitle="By Peter Elliott" title="Green"/>
         <TitleSlide theme="brown" subtitle="By Peter Elliott" title="Brown"/>
         <MiniBrowserDemoSlide theme="brown" title="Brown"/>
         <TitleSlide theme="pink" subtitle="By Peter Elliott" title="Pink"/>
