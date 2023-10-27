@@ -2,6 +2,7 @@ import { useState } from "reactor";
 import { IconButton } from "./util";
 
 export const MiniBrowser = (props) => {
+    console.log(props);
     return (
         <div className="minibrowser">
             <div className="mbtabcontainer">
@@ -25,7 +26,7 @@ export const MiniBrowser = (props) => {
                 </div>
             </div>
             <div className="mbcontent">
-                <iframe src={props.src}/>
+                {props.children}
             </div>
         </div>
     );

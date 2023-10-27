@@ -107,7 +107,7 @@ html, body {
     flex-direction: column;
 }
 
-.titledcontainer h1 {
+.titledcontainer > h1 {
     /*text-align: center;*/
     margin: 0;
     padding: 1rem;

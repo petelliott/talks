@@ -3,7 +3,7 @@ import { IconButton } from "./util";
 
 
 export const SlideShow = (props) => {
-    const [slide, setSlide] = useState(0);
+    const [slide, setSlide] = useState(props.start ?? 0);
     const slides = Array.isArray(props.children)? props.children : props.children;
     const theme = slides[slide]?.props?.theme ?? "grey";
     const onkeydown = (event) => {

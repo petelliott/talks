@@ -180,7 +180,6 @@ let inrender = false;
 const renderQueue = [];
 export const scheduleRerender = (vdom) => {
     renderQueue.push(vdom);
-    effectQeuee.push(vdom);
     if (!inrender) {
         inrender = true;
         withEffectsRun(() => {

@@ -2,6 +2,7 @@ import * as Reactor from "reactor";
 import { SlideShow, Slide, TitledContainer, HSplit, VSplit, TitleSlide, TitledSlide } from "./slideshow";
 import { MiniBrowser } from "./minibrowser";
 import { Editor } from "./editor";
+import { HowToWriteYourOwnReact } from "./writeyourownreact";
 
 const ListDemoSlide = (props) => (
     <TitledSlide {...props}>
@@ -49,11 +50,9 @@ const MiniBrowserDemoSlide = (props) => (
                         {content: example_code, title: "some code", language: "jsx"},
                         {content: "asdfsdfsddgsdg\n\n\n\n\n\n\n\nasdfsdf\n\nasdfsdf\n\n\n\n\n\n\n\n\n\n\n\n\n\nasdfsdfsd\nsadfsd\nsdfsdaf", title: "other code", language: "jsx"}
                     ]}/>
-            {/*<MiniBrowser src="https://wikipedia.org" title="Wikipedia"/>*/}
         </HSplit>
     </TitledSlide>
 );
-
 
 const App = (props) => (
     <SlideShow>
@@ -70,4 +69,5 @@ const App = (props) => (
     </SlideShow>
 );
 
-Reactor.render(document.getElementById("root"), <App />);
+//Reactor.render(document.getElementById("root"), <App />);
+Reactor.render(document.getElementById("root"), <HowToWriteYourOwnReact />);
