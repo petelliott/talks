@@ -1,5 +1,5 @@
 import { propsEqual, arraySetDifference } from "./util";
-import { withHookContext, runEffects } from "./hooks";
+import { withHookContext, withEffectsRun } from "./hooks";
 
 const textnode = Symbol("textnode");
 
@@ -167,19 +167,12 @@ const renderDom = (newvdom, current) => {
     return newvdom.element;
 };
 
-const runAllEffects = (node) => {
-    if (typeof node.type === "function") {
-        runEffects(node);
-        runAllEffects(node.children);
-    } else if (typeof node.type === "string" ) {
-        Object.values(node.children).forEach(runAllEffects);
-    }
-};
-
 export const renderInitial = (element, component) => {
-    const vdom = renderVdom(component, null);
-    element.appendChild(renderDom(vdom, null));
-    return vdom;
+    return withEffectsRun(() => {
+        const vdom = renderVdom(component, null);
+        element.appendChild(renderDom(vdom, null));
+        return vdom;
+    });
 };
 
 // TODO make this per render().
@@ -187,16 +180,18 @@ let inrender = false;
 const renderQueue = [];
 export const scheduleRerender = (vdom) => {
     renderQueue.push(vdom);
+    effectQeuee.push(vdom);
     if (!inrender) {
         inrender = true;
-        while (renderQueue.length > 0) {
-            const node = renderQueue.shift();
-            const oldvdom = node.children;
-            node.children = renderVdom(runComponent(node, node), node.children);
-            node.element = renderDom(node.children, oldvdom);
-        }
+        withEffectsRun(() => {
+            while (renderQueue.length > 0) {
+                const node = renderQueue.shift();
+                const oldvdom = node.children;
+                node.children = renderVdom(runComponent(node, node), node.children);
+                node.element = renderDom(node.children, oldvdom);
+            }
+        });
         // TODO coalesce renders
-        runAllEffects(vdom);
         inrender = false;
     }
 }

@@ -33,6 +33,19 @@ export const useState = (initialState) => {
     return state[index];
 };
 
+let effectQueue;
+export const withEffectsRun = (proc) => {
+    effectQueue = [];
+    const ret = proc();
+
+    for (const effect of effectQueue) {
+        effect();
+    }
+
+    effectQueue = undefined;
+    return ret;
+};
+
 export const useEffect = (effect, dependencies) => {
     const node = hookNode;
     const index = useEffectCounter;
@@ -43,17 +56,12 @@ export const useEffect = (effect, dependencies) => {
         effects[index] = {}
     }
 
-    effects[index].effect = effect;
-    effects[index].olddeps = effects[index].deps;
-    effects[index].deps = dependencies;
+    effectQueue.push(() => {
+        if (!dependenciesEqual(effects[index].deps) ||
+            effects[index].deps === null || effects[index].deps === undefined) {
+            effect();
+        }
+        effects[index].deps = dependencies;
+    });
     ++useEffectCounter;
 };
-
-export const runEffects = (node) => {
-    for (const effect of Object.values(node?.effects ?? {})) {
-        if (!dependenciesEqual(effect.olddeps, effect.deps) ||
-            effect.deps === null || effect.deps === undefined) {
-            effect.effect();
-        }
-    }
-}
