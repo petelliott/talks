@@ -9,9 +9,15 @@
 }
 
 /* general styles */
-ul {
+ul,ol {
+    margin: 0;
     margin-left: calc(var(--container-margin) * 1.5);
 }
+
+a {
+    color: var(--theme-color-full);
+}
+
 li::marker {
     color: var(--theme-color-full);
 }
@@ -150,4 +156,9 @@ html, body {
     display: flex;
     flex-direction: column;
     gap: var(--container-margin);
+}
+
+/* Bibliography */
+.bibhighlight {
+    background-color: var(--theme-color-light);
 }

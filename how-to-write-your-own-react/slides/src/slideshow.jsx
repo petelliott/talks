@@ -1,30 +1,37 @@
 import { useState, useEffect } from "reactor";
 import { IconButton } from "./util";
-
-
+import { useFragment } from "./nav";
 
 export const SlideShow = (props) => {
+    console.log("render");
     const slides = Array.isArray(props.children)? props.children : [props.children];
 
-    const hash = window.location.hash?.substr(1);
-    let startslide = slides.findIndex((s) => s?.props?.fragment === hash);
-    if (startslide === -1) {
-        startslide = Number(hash); // Number("") === 0
+    let [fragment, setFragment] = useFragment(props.bindFragment);
+    fragment = fragment.toString().split(".")[0];
+    let slide = slides.findIndex((s) => s?.props?.fragment === fragment);
+    if (slide === -1) {
+        slide = Number(fragment); // Number("") === 0
     }
 
-    const [slide, setSlide] = useState(startslide);
+    const nextSlide = () => {
+        if (slide+1 < slides.length) {
+            setFragment(slides[slide+1].props.fragment ?? (slide+1))
+        }
+    };
+
+    const previousSlide = () => {
+        if (slide > 0 ) {
+            setFragment(slides[slide-1].props.fragment ?? (slide-1));
+        }
+    };
+
     const theme = slides[slide]?.props?.theme ?? "grey";
     const onkeydown = (event) => {
         if (event.key === "ArrowRight" || event.key === " ")
-            setSlide(Math.min(slide+1, slides.length-1));
+            nextSlide();
         if (event.key === "ArrowLeft")
-            setSlide(Math.max(slide-1, 0));
+            previousSlide();
     };
-
-    const fragment = slides[slide]?.props?.fragment ?? slide;
-    useEffect(() => {
-        window.location.hash = fragment;
-    }, [fragment]);
 
     return (
         <div className={`fullheight ${theme} ${props.className??""}`} onkeydown={onkeydown} tabindex="0">
@@ -33,12 +40,12 @@ export const SlideShow = (props) => {
                 <IconButton
                     icon="arrow_back"
                     className="previous-slide slide-nav-button"
-                    onclick={() => setSlide(slide-1)}
-                    enabled={slide != 0} />
+                    onclick={previousSlide}
+                    enabled={slide > 0} />
                 <IconButton
                     icon="arrow_forward "
                     className="next-slide slide-nav-button"
-                    onclick={() => setSlide(slide+1)}
+                    onclick={nextSlide}
                     enabled={slide+1 < slides.length} />
             </div>
         </div>
