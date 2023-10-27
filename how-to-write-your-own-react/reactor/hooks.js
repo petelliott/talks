@@ -65,3 +65,8 @@ export const useEffect = (effect, dependencies) => {
     });
     ++useEffectCounter;
 };
+
+export const useRef = (dflt) => {
+    const [state,setState] = useState({ current: dflt });
+    return state;
+};
