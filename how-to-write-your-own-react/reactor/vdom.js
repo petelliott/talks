@@ -15,64 +15,64 @@ const normalizeChildren = (children) => {
     return children.map(normalizeChildren).reduce((a, b) => a.concat(b), []);
 };
 
-const willRenderAsText = (component) =>
-    typeof component !== "function" && typeof component !== "object";
+const willRenderAsText = (element) =>
+    typeof element !== "function" && typeof element !== "object";
 
 // vdom rendering
 
-const runComponent = (component, vdom) =>
-      withHookContext(vdom, () => component.type(component.props));
+const runElement = (element, vdom) =>
+      withHookContext(vdom, () => element.type(element.props));
 
-const renderVdom = (component, vdom) => {
+const renderVdom = (element, vdom) => {
     // convert undefined to null for consistency
     vdom ??= null;
-    if ((willRenderAsText(component) && vdom?.type !== textnode) ||
-        component.type !== vdom?.type) {
-        // Fresh render when the component type is different
+    if ((willRenderAsText(element) && vdom?.type !== textnode) ||
+        element.type !== vdom?.type) {
+        // Fresh render when the element type is different
         vdom = null;
     }
 
-    if (willRenderAsText(component)) {
-        if (vdom?.value === component) {
+    if (willRenderAsText(element)) {
+        if (vdom?.value === element) {
             return vdom;
         }
 
         return {
             type: textnode,
-            value: component,
+            value: element,
         };
     }
 
-    if (propsEqual(component.props, vdom?.props)) {
+    if (propsEqual(element.props, vdom?.props)) {
         return vdom;
     }
 
-    if (typeof component.type === "function") {
+    if (typeof element.type === "function") {
         const new_vdom = {
-            type: component.type,
-            props: component.props,
+            type: element.type,
+            props: element.props,
             children: null,
             state: vdom?.state ?? {},
         };
         new_vdom.children = renderVdom(
-            runComponent(component, new_vdom),
+            runElement(element, new_vdom),
             vdom?.children
         );
         return new_vdom;
     }
 
     const new_children = Object.fromEntries(
-        normalizeChildren(component.props.children)
-            .map((component, i) => {
+        normalizeChildren(element.props.children)
+            .map((element, i) => {
                 // "$" and "_" prevent number like keys from getting reordered when itterating over a list
                 // and also prevents automatic keys being mistaken for regular keys.
-                const key = (component.key === undefined)? "$"+i : "_" + component.key;
-                return [key, renderVdom(component, vdom?.children?.[key])];
+                const key = (element.key === undefined)? "$"+i : "_" + element.key;
+                return [key, renderVdom(element, vdom?.children?.[key])];
             }));
 
     return {
-        type: component.type,
-        props: component.props,
+        type: element.type,
+        props: element.props,
         children: new_children,
     };
 };
@@ -167,10 +167,10 @@ const renderDom = (newvdom, current) => {
     return newvdom.element;
 };
 
-export const renderInitial = (element, component) => {
+export const renderInitial = (domElement, reactorElement) => {
     return withEffectsRun(() => {
-        const vdom = renderVdom(component, null);
-        element.appendChild(renderDom(vdom, null));
+        const vdom = renderVdom(reactorElement, null);
+        domElement.appendChild(renderDom(vdom, null));
         return vdom;
     });
 };
@@ -186,7 +186,7 @@ export const scheduleRerender = (vdom) => {
             while (renderQueue.length > 0) {
                 const node = renderQueue.shift();
                 const oldvdom = node.children;
-                node.children = renderVdom(runComponent(node, node), node.children);
+                node.children = renderVdom(runElement(node, node), node.children);
                 node.element = renderDom(node.children, oldvdom);
             }
         });

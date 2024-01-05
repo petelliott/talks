@@ -26,6 +26,12 @@ export const Editor = (props) => {
 
     return (
         <div className="editor">
+            { props.title &&
+              <div className="etabcontainer">
+                      <div className="etab">
+                          {props.title}
+                      </div>
+              </div> }
             { props.tabs &&
               <div className="etabcontainer">
                   { props.tabs.map(t => (

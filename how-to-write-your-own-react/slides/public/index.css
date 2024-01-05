@@ -22,6 +22,10 @@ li::marker {
     color: var(--theme-color-full);
 }
 
+sup {
+    font-size: calc(var(--font-size)*.75);
+}
+
 html, body {
     height: 100%;
     margin: 0;

@@ -3,7 +3,6 @@ import { IconButton } from "./util";
 import { useFragment } from "./nav";
 
 export const SlideShow = (props) => {
-    console.log("render");
     const slides = Array.isArray(props.children)? props.children : [props.children];
 
     let [fragment, setFragment] = useFragment(props.bindFragment);
@@ -35,7 +34,7 @@ export const SlideShow = (props) => {
 
     return (
         <div className={`fullheight ${theme} ${props.className??""}`} onkeydown={onkeydown} tabindex="0">
-            <div className="fullheight" >{slides[slide]}</div>
+            <div className="fullheight" key={slide}>{slides[slide]}</div>
             <div className="controls">
                 <IconButton
                     icon="arrow_back"

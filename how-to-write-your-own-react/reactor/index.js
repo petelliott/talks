@@ -4,7 +4,7 @@ export { useState, useEffect, useRef } from "./hooks";
 
 export const render = renderInitial;
 
-export const component = (renderer, props, key) => ({
+export const element = (renderer, props, key) => ({
     type: renderer,
     props: props,
     key: key

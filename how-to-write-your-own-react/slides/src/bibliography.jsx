@@ -1,14 +1,14 @@
 import { TitledSlide } from "./slideshow";
 
 export const Ref = (props) => (
-    <sup><a href={props.href} title={props.title}>{props.index+1}</a></sup>
+    <sup><a style={props.style} href={props.href} title={props.title}>{props.index+1}</a></sup>
 );
 
 export const useBibliography = () => {
     const bib = [];
-    const ref = (text, link) => {
+    const ref = (text, link, style) => {
         bib.push({text, link});
-        return <Ref index={bib.length-1} text={text} href={`#bibliography.${bib.length-1}`}/>;
+        return <Ref index={bib.length-1} text={text} href={`#bibliography.${bib.length-1}`} style={style}/>;
     };
     return [bib, ref];
 };
