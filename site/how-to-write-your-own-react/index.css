@@ -1,0 +1,168 @@
+@import url("theme.css");
+@import url("minibrowser.css");
+@import url("editor.css");
+@import url("solarized-light.css");
+/* vars */
+.slide {
+    --font-size: 4rem;
+    --container-margin: 4rem;
+}
+
+/* general styles */
+ul,ol {
+    margin: 0;
+    margin-left: calc(var(--container-margin) * 1.5);
+}
+
+a {
+    color: var(--theme-color-full);
+}
+
+li::marker {
+    color: var(--theme-color-full);
+}
+
+sup {
+    font-size: calc(var(--font-size)*.75);
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+
+.slide {
+    font-size: var(--font-size);
+}
+
+.fullheight {
+    height: 100%;
+}
+
+/* control stuff */
+
+.icon-button {
+    background: none;
+    padding: 0;
+    border: none;
+}
+
+.icon-button > .material-symbols-outlined {
+    vertical-align: middle;
+}
+
+.controls {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 14rem;
+    height: 10rem;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.controls:hover {
+    opacity: 100%;
+    transition: opacity 0.25s ease-in-out;
+}
+
+
+.slide-nav-button {
+    color: var(--theme-color-full);
+    padding: 0.2rem;
+    border-radius: 50%;
+}
+
+.slide-nav-button:hover {
+    background-color: var(--theme-color-light);
+}
+
+.slide-nav-button.disabled {
+    color: var(--theme-color-mid);
+}
+
+.slide-nav-button > .material-symbols-outlined {
+    font-size: 48px;
+}
+
+.previous-slide {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 5rem;
+}
+
+.next-slide {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1.5rem;
+}
+
+
+/* container */
+.container {
+    display:flex;
+    flex: 1;
+    margin: var(--container-margin);
+}
+
+.container > .container {
+    margin: 0;
+}
+
+/* TitleContainer */
+.titledcontainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.titledcontainer > h1 {
+    /*text-align: center;*/
+    margin: 0;
+    padding: 1rem;
+    padding-left: var(--container-margin);
+    font-size: calc(var(--font-size)*1.5);
+    background-color: var(--theme-color-full);
+    color: white;
+}
+
+/* TitleSlide */
+.titleslide {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.titleslide h1 {
+    font-size: calc(var(--font-size)*2);
+    margin: 0;
+    color: var(--theme-color-full);
+}
+
+.titleslide h2 {
+    font-size: calc(var(--font-size));
+    margin: 0;
+    color: var(--theme-color-mid);
+}
+
+
+/* HSplit and Vsplit */
+.hsplit {
+    display: flex;
+    flex-direction: row;
+    gap: calc(var(--container-margin));
+}
+
+.vsplit {
+    display: flex;
+    flex-direction: column;
+    gap: var(--container-margin);
+}
+
+/* Bibliography */
+.bibhighlight {
+    background-color: var(--theme-color-light);
+}

@@ -1,0 +1,82 @@
+
+.editor {
+    width: 100%;
+    height: 100%;
+    --outline-radius: 0.2rem;
+    font-size: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.editor .etabcontainer {
+    background-color: var(--theme-color-light);
+    border-top-left-radius: var(--outline-radius);
+    border-top-right-radius: var(--outline-radius);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.editor .etab {
+    background-color: var(--theme-color-mid);
+    width: max-content;
+    margin: 0.4rem;
+    /*margin-bottom:0.2rem;*/
+    padding: 0.5rem;
+    border-radius: var(--outline-radius);
+    min-width: 11rem;
+    color: var(--theme-color-light3);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    /*gap: 0.5rem;*/
+    margin-right: 0;
+    cursor: pointer;
+}
+
+.editor .etab:hover {
+    background-color: var(--theme-color-full);
+    color: var(--theme-color-mid);
+}
+
+
+.editor .pane {
+    display: flex;
+    flex-direction: row;
+    overflow: scroll;
+    height: 100%;
+}
+
+.editor .gutter {
+    display: flex;
+    flex-direction: column;
+    font-family: monospace;
+    background-color: var(--theme-color-light);
+    color: var(--theme-color-mid);
+    border-bottom-left-radius: var(--outline-radius);
+    padding: 0.5rem;
+    white-space: pre;
+}
+
+.editor .gutter.topcorners {
+    border-top-left-radius: var(--outline-radius);
+}
+
+.editor .content {
+    white-space: pre;
+    font-family: monospace;
+    padding: 0.5rem;
+    flex: 1;
+    border-bottom-right-radius: var(--outline-radius);
+    background-color: var(--theme-color-light3);
+}
+
+.editor .hljs {
+    background-color: var(--theme-color-light3);
+}
+
+.editor .content.topcorners {
+    border-top-right-radius: var(--outline-radius);
+}
